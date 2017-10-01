@@ -1,3 +1,4 @@
+// swift-tools-version:4.0
 //
 //  Package.swift
 //  Hash
@@ -7,22 +8,22 @@ import PackageDescription
 
 let package = Package(
 	name: "Hash",
-	dependencies: [
-		.Package(url: "https://github.com/DavidSkrundz/ProtocolNumbers.git", majorVersion: 1, minor: 0),
-		.Package(url: "https://github.com/DavidSkrundz/UnicodeOperators.git", majorVersion: 1, minor: 0),
-	]
+	products: [
+		.library(
+			name: "Hash",
+			type: .static,
+			targets: ["Hash"]),
+		.library(
+			name: "Hash",
+			type: .dynamic,
+			targets: ["Hash"]),
+		],
+	targets: [
+		.target(
+			name: "Hash",
+			dependencies: []),
+		.testTarget(
+			name: "HashTests",
+			dependencies: ["Hash"]),
+		]
 )
-
-let staticLibrary = Product(
-	name: "Hash",
-	type: .Library(.Static),
-	modules: ["Hash"]
-)
-let dynamicLibrary = Product(
-	name: "Hash",
-	type: .Library(.Dynamic),
-	modules: ["Hash"]
-)
-
-products.append(staticLibrary)
-products.append(dynamicLibrary)

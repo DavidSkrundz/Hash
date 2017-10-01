@@ -3,8 +3,8 @@
 //  Hash
 //
 
-@testable import HashTests
 import XCTest
+@testable import HashTests
 
 XCTMain([
 	testCase(MD2Tests.allTests),

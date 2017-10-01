@@ -5,19 +5,27 @@
 
 // Reference: https://tools.ietf.org/html/rfc1320
 
-public struct MD4: Hashing, MD {
-	internal static let digestLoopCount = 3
+public struct MD4: MD {
+	internal static var digestLoopCount = 3
+	
+	private static let _BlockIndex = [
+		Array(0..<16),
+		[0, 4, 8, 12, 1,  5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15],
+		[0, 8, 4, 12, 2, 10, 6, 14, 1, 9,  5, 13, 3, 11, 7, 15]
+	]
+	private static let _Constant: [Word] = [
+		0x00000000, 0x5A827999, 0x6ED9EBA1
+	]
+	private static let _Rotations: [[Word]] = [
+		[3, 7, 11, 19], [3, 5,  9, 13], [3, 9, 11, 15]
+	]
 	
 	internal static func BlockIndex(_ i: Int) -> Int {
-		return [
-			Array(0..<16),
-			[0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15],
-			[0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15],
-		][i / 16][i % 16]
+		return MD4._BlockIndex[i / 16][i % 16]
 	}
 	
 	internal static func Constant(_ i: Int) -> Word {
-		return [0x00000000, 0x5A827999, 0x6ED9EBA1][i / 16]
+		return MD4._Constant[i / 16]
 	}
 	
 	internal static func F(_ i: Int, _ x: Word, _ y: Word, _ z: Word) -> Word {
@@ -30,12 +38,12 @@ public struct MD4: Hashing, MD {
 	}
 	
 	internal static func Rotations(_ i: Int) -> Word {
-		return [[3, 7, 11, 19], [3, 5,  9, 13], [3, 9, 11, 15]][i / 16][i % 4]
+		return MD4._Rotations[i / 16][i % 4]
 	}
 	
-	internal var dataBuffer = ByteBuffer()
+	internal var data = ByteBuffer()
 	internal var digest: [Word] = [
-		0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476,
+		0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476
 	]
 	
 	internal var finalized = false

@@ -3,10 +3,8 @@
 //  Hash
 //
 
-@testable import Hash
 import XCTest
-
-import Foundation
+import Hash
 
 class SHA1Tests: XCTestCase {
 	func testEmptyBytes() {

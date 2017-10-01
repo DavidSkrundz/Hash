@@ -3,8 +3,6 @@
 //  Hash
 //
 
-import UnicodeOperators
-
 // Reference: https://tools.ietf.org/html/rfc1319
 
 public struct MD2: Hashing {
@@ -30,10 +28,10 @@ public struct MD2: Hashing {
 		233, 203, 213, 254,  59,   0,  29,  57, 242, 239, 183,  14,
 		102,  88, 208, 228, 166, 119, 114, 248, 235, 117,  75,  10,
 		 49,  68,  80, 180, 143, 237,  31,  26, 219, 153, 141,  51,
-		159,  17, 131,  20,
+		159,  17, 131,  20
 	]
 	
-	private var dataBuffer = [Byte]()
+	private var data = ByteBuffer()
 	private var digest = [Byte](repeating: 0, count: 48)
 	
 	private var checksum = [Byte](repeating: 0, count: 16)
@@ -43,60 +41,54 @@ public struct MD2: Hashing {
 	
 	public init() {}
 	
+	public mutating func hashData(_ data: [Byte]) {
+		precondition(self.finalized == false)
+		self.data.append(data)
+		self.digestBlocks()
+	}
+	
 	public mutating func finalize() -> Hash {
 		precondition(self.finalized == false)
 		self.padData()
 		self.hashData(self.checksum)
 		self.finalized = true
-		
 		return Hash(bytes: Array(self.digest.prefix(16)))
 	}
 	
 	private mutating func padData() {
-		let length = 16 - (self.dataBuffer.count % 16)
-		let padding = [Byte](repeating: Byte(length), count: length)
-		self.hashData(padding)
-	}
-	
-	public mutating func hashData(_ data: [Byte]) {
-		precondition(self.finalized == false)
-		self.dataBuffer += data
-		self.digestBlocks()
+		let length = 16 - (self.data.count % 16)
+		self.hashData([Byte](repeating: Byte(length), count: length))
 	}
 	
 	private mutating func digestBlocks() {
-		while self.dataBuffer.count ≥ 16 {
-			self.digestBlock()
+		while self.data.count >= 16 {
+			self.digest(block: self.data.processBytes(16))
 		}
 	}
 	
-	private mutating func digestBlock() {
-		for j in 0..<16 {
-			let currentValue = self.dataBuffer.removeFirst()
-			
-			self.digest[16 + j] = currentValue
-			self.digest[32 + j] = self.digest[16 + j] ^ self.digest[j]
-			
-			self.computeChecksum(j, currentValue: currentValue)
+	private mutating func digest(block: [Byte]) {
+		block.enumerated().forEach { (i, item) in
+			self.digest[16 + i] = item
+			self.digest[32 + i] = self.digest[16 + i] ^ self.digest[i]
+			self.computeChecksum(i, item)
 		}
-		
 		self.computeDigest()
 	}
 	
-	private mutating func computeChecksum(_ j: Int, currentValue: Byte) {
-		let substitutionIndex = Int(currentValue ^ self.lastChecksumValue)
-		self.checksum[j] ^= MD2.Substitutions[substitutionIndex]
-		self.lastChecksumValue = self.checksum[j]
+	private mutating func computeChecksum(_ i: Int, _ value: Byte) {
+		let substitutionIndex = Int(value ^ self.lastChecksumValue)
+		self.checksum[i] ^= MD2.Substitutions[substitutionIndex]
+		self.lastChecksumValue = self.checksum[i]
 	}
 	
 	private mutating func computeDigest() {
-		var temp: Byte = 0
+		var tmp: Byte = 0
 		for i in 0..<18 {
 			for j in 0..<48 {
-				temp = self.digest[j] ^ MD2.Substitutions[Int(temp)]
-				self.digest[j] = temp
+				tmp = self.digest[j] ^ MD2.Substitutions[Int(tmp)]
+				self.digest[j] = tmp
 			}
-			temp = temp &+ Byte(i)
+			tmp = tmp &+ Byte(i)
 		}
 	}
 }

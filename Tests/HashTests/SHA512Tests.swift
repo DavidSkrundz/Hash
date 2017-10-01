@@ -2,14 +2,9 @@
 //  SHA512Tests.swift
 //  Hash
 //
-//  Created by David Skrundz on 2016-08-11.
-//
-//
 
-@testable import Hash
 import XCTest
-
-import Foundation
+import Hash
 
 class SHA512Tests: XCTestCase {
 	func testEmptyBytes() {
