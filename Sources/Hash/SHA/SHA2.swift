@@ -3,11 +3,13 @@
 //  Hash
 //
 
+// Reference: https://tools.ietf.org/html/rfc6234
+
 internal protocol SHA2: Hashing {
 	associatedtype Data: FixedWidthInteger
 	
 	static var lengthBytesPrefix: [Byte] { get }
-	static var dropLastAmount: Int { get }
+	static var hashByteCount: Int { get }
 	static var blockSize: Int { get }
 	static var blockBufferSize: Int { get }
 	static var constant: [Data] { get }
@@ -40,10 +42,8 @@ extension SHA2 {
 		lengthBytes += (self.data.length &* 8).bigEndianBytes
 		self.hashData(lengthBytes)
 		self.finalized = true
-		let bytes = self.digest
-			.dropLast(Self.dropLastAmount)
-			.flatMap { $0.bigEndianBytes }
-		return Hash(bytes: bytes)
+		let bytes = self.digest.flatMap { $0.bigEndianBytes }
+		return Hash(bytes: Array(bytes[0..<Self.hashByteCount]))
 	}
 	
 	private mutating func padData() {

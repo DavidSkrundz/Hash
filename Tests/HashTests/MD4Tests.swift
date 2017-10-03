@@ -109,6 +109,6 @@ class MD4Tests: XCTestCase {
 		("testAlphabet", testAlphabet),
 		("testFullAlphabet", testFullAlphabet),
 		("testLotsOfNumbers", testLotsOfNumbers),
-		("testCollision", testCollision),
+		("testCollision", testCollision)
 	]
 }

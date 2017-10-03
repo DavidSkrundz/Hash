@@ -11,7 +11,7 @@ Implemented Functions
 - MD4
 - MD5
 - SHA1
-- SHA224
-- SHA256
-- SHA384
-- SHA512
+- SHA2_224
+- SHA2_256
+- SHA2_384
+- SHA2_512

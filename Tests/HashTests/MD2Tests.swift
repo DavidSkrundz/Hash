@@ -78,6 +78,6 @@ class MD2Tests: XCTestCase {
 		("testMessageDigest", testMessageDigest),
 		("testAlphabet", testAlphabet),
 		("testFullAlphabet", testFullAlphabet),
-		("testLotsOfNumbers", testLotsOfNumbers),
+		("testLotsOfNumbers", testLotsOfNumbers)
 	]
 }
