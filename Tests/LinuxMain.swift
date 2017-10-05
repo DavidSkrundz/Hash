@@ -15,4 +15,8 @@ XCTMain([
 	testCase(SHA2_256Tests.allTests),
 	testCase(SHA2_384Tests.allTests),
 	testCase(SHA2_512Tests.allTests),
+	testCase(SHA3_224Tests.allTests),
+	testCase(SHA3_256Tests.allTests),
+	testCase(SHA3_384Tests.allTests),
+	testCase(SHA3_512Tests.allTests),
 ])

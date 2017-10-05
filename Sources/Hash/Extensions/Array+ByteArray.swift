@@ -34,6 +34,10 @@ extension Array where Element == Byte {
 		return self.toArray(endinanness: .Big)
 	}
 	
+	internal func asLittleEndian<T: BinaryInteger>() -> [T] {
+		return self.toArray(endinanness: .Little)
+	}
+	
 	private func toArray<T: BinaryInteger>(endinanness: Endianness) -> [T] {
 		let byteCount = MemoryLayout<T>.size
 		var array = [T]()
