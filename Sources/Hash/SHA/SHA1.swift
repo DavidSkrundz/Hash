@@ -38,7 +38,7 @@ public struct SHA1: Hashing {
 	
 	private mutating func digestBlocks() {
 		while self.data.count >= 64 {
-			self.digest(block: self.data.processBytes(64).asBigEndianWords)
+			self.digest(block: self.data.processBytes(64).asBigEndian())
 		}
 	}
 	

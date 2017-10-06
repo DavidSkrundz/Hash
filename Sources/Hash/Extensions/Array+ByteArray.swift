@@ -22,14 +22,6 @@ extension Array where Element == Byte {
 		return characters.reduce("") { $0 + "\($1)" }
 	}
 	
-	internal var asBigEndianWords: [Word] {
-		return self.toArray(endinanness: .Big)
-	}
-	
-	internal var asLittleEndianWords: [Word] {
-		return self.toArray(endinanness: .Little)
-	}
-	
 	internal func asBigEndian<T: BinaryInteger>() -> [T] {
 		return self.toArray(endinanness: .Big)
 	}

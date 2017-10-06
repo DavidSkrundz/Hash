@@ -49,7 +49,7 @@ extension MD {
 	
 	private mutating func digestBlocks() {
 		while self.data.count >= 64 {
-			self.digest(block: self.data.processBytes(64).asLittleEndianWords)
+			self.digest(block: self.data.processBytes(64).asLittleEndian())
 		}
 	}
 	
