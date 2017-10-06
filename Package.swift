@@ -16,14 +16,14 @@ let package = Package(
 		.library(
 			name: "Hash",
 			type: .dynamic,
-			targets: ["Hash"]),
-		],
+			targets: ["Hash"])
+	],
 	targets: [
 		.target(
 			name: "Hash",
 			dependencies: []),
 		.testTarget(
 			name: "HashTests",
-			dependencies: ["Hash"]),
-		]
+			dependencies: ["Hash"])
+	]
 )
