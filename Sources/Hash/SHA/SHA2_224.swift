@@ -8,11 +8,11 @@
 public struct SHA2_224: SHA2 {
 	internal typealias Data = Word
 	
-	internal static var lengthBytesPrefix = [Byte]()
-	internal static var hashByteCount = 224 / 8
-	internal static var blockSize = 64
-	internal static var blockBufferSize = 64
-	internal static var constant: [Data] = [
+	internal static let lengthBytesPrefix = [Byte]()
+	internal static let hashByteCount = 224 / 8
+	internal static let blockSize = 64
+	internal static let blockBufferSize = 64
+	internal static let constant: [Data] = [
 		0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
 		0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
 		0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,

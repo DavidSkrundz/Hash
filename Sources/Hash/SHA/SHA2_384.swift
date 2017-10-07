@@ -8,11 +8,11 @@
 public struct SHA2_384: SHA2 {
 	internal typealias Data = Long
 	
-	internal static var lengthBytesPrefix = [Byte](repeating: 0, count: 8)
-	internal static var hashByteCount = 384 / 8
-	internal static var blockSize = 128
-	internal static var blockBufferSize = 80
-	internal static var constant: [Data] = [
+	internal static let lengthBytesPrefix = [Byte](repeating: 0, count: 8)
+	internal static let hashByteCount = 384 / 8
+	internal static let blockSize = 128
+	internal static let blockBufferSize = 80
+	internal static let constant: [Data] = [
 		0x428a2f98d728ae22, 0x7137449123ef65cd, 0xb5c0fbcfec4d3b2f,
 		0xe9b5dba58189dbbc, 0x3956c25bf348b538, 0x59f111f1b605d019,
 		0x923f82a4af194f9b, 0xab1c5ed5da6d8118, 0xd807aa98a3030242,
