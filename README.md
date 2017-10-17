@@ -10,6 +10,7 @@ Implemented Functions
 - MD2
 - MD4
 - MD5
+- SHA0
 - SHA1
 - SHA2_224
 - SHA2_256

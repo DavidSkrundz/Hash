@@ -10,6 +10,7 @@ XCTMain([
 	testCase(MD2Tests.allTests),
 	testCase(MD4Tests.allTests),
 	testCase(MD5Tests.allTests),
+	testCase(SHA0Tests.allTests),
 	testCase(SHA1Tests.allTests),
 	testCase(SHA2_224Tests.allTests),
 	testCase(SHA2_256Tests.allTests),
