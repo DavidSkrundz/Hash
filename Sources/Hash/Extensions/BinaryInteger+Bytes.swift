@@ -3,14 +3,14 @@
 //  Hash
 //
 
-extension BinaryInteger {
+extension FixedWidthInteger {
 	internal var littleEndianBytes: [Byte] {
-		return (0..<MemoryLayout<Self>.size)
-			.map { self >> ($0 * 8) }
-			.map { Byte($0 & 0xFF) }
+		var copy = self.littleEndian
+		return withUnsafeBytes(of: &copy, Array.init)
 	}
 	
 	internal var bigEndianBytes: [Byte] {
-		return self.littleEndianBytes.reversed()
+		var copy = self.bigEndian
+		return withUnsafeBytes(of: &copy, Array.init)
 	}
 }
