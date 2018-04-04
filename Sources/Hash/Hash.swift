@@ -4,9 +4,9 @@
 //
 
 public struct Hash {
-	public let bytes: [Byte]
+	public let bytes: [UInt8]
 	
-	internal init(bytes: [Byte]) {
+	internal init(bytes: [UInt8]) {
 		self.bytes = bytes
 	}
 }

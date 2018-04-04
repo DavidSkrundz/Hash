@@ -3,12 +3,14 @@
 //  Hash
 //
 
+import Math
+
 // Reference: https://tools.ietf.org/html/rfc6234
 
 public struct SHA2_512: SHA2 {
-	internal typealias Data = Long
+	internal typealias Data = UInt64
 	
-	internal static let lengthBytesPrefix = [Byte](repeating: 0, count: 8)
+	internal static let lengthBytesPrefix = [UInt8](repeating: 0, count: 8)
 	internal static let hashByteCount = 512 / 8
 	internal static let blockSize = 128
 	internal static let blockBufferSize = 80

@@ -6,7 +6,7 @@
 // Reference: https://tools.ietf.org/html/rfc1319
 
 public struct MD2: Hashing {
-	private static let Substitutions: [Byte] = [
+	private static let Substitutions: [UInt8] = [
 		 41,  46,  67, 201, 162, 216, 124,   1,  61,  54,  84, 161,
 		236, 240,   6,  19,  98, 167,   5, 243, 192, 199, 115, 140,
 		152, 147,  43, 217, 188,  76, 130, 202,  30, 155,  87,  60,
@@ -32,16 +32,16 @@ public struct MD2: Hashing {
 	]
 	
 	private var data = ByteBuffer()
-	private var digest = [Byte](repeating: 0, count: 48)
+	private var digest = [UInt8](repeating: 0, count: 48)
 	
-	private var checksum = [Byte](repeating: 0, count: 16)
-	private var lastChecksumValue: Byte = 0
+	private var checksum = [UInt8](repeating: 0, count: 16)
+	private var lastChecksumValue: UInt8 = 0
 	
 	private var finalized = false
 	
 	public init() {}
 	
-	public mutating func hashData(_ data: [Byte]) {
+	public mutating func hashData(_ data: [UInt8]) {
 		precondition(self.finalized == false)
 		self.data.append(data)
 		self.digestBlocks()
@@ -57,7 +57,7 @@ public struct MD2: Hashing {
 	
 	private mutating func padData() {
 		let length = 16 - (self.data.count % 16)
-		self.hashData([Byte](repeating: Byte(length), count: length))
+		self.hashData([UInt8](repeating: UInt8(length), count: length))
 	}
 	
 	private mutating func digestBlocks() {
@@ -66,7 +66,7 @@ public struct MD2: Hashing {
 		}
 	}
 	
-	private mutating func digest(block: [Byte]) {
+	private mutating func digest(block: [UInt8]) {
 		block.enumerated().forEach { (i, item) in
 			self.digest[16 + i] = item
 			self.digest[32 + i] = self.digest[16 + i] ^ self.digest[i]
@@ -75,20 +75,20 @@ public struct MD2: Hashing {
 		self.computeDigest()
 	}
 	
-	private mutating func computeChecksum(_ i: Int, _ value: Byte) {
+	private mutating func computeChecksum(_ i: Int, _ value: UInt8) {
 		let substitutionIndex = Int(value ^ self.lastChecksumValue)
 		self.checksum[i] ^= MD2.Substitutions[substitutionIndex]
 		self.lastChecksumValue = self.checksum[i]
 	}
 	
 	private mutating func computeDigest() {
-		var tmp: Byte = 0
+		var tmp: UInt8 = 0
 		for i in 0..<18 {
 			for j in 0..<48 {
 				tmp = self.digest[j] ^ MD2.Substitutions[Int(tmp)]
 				self.digest[j] = tmp
 			}
-			tmp = tmp &+ Byte(i)
+			tmp = tmp &+ UInt8(i)
 		}
 	}
 }

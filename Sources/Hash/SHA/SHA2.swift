@@ -8,7 +8,7 @@
 internal protocol SHA2: Hashing {
 	associatedtype Data: FixedWidthInteger
 	
-	static var lengthBytesPrefix: [Byte] { get }
+	static var lengthBytesPrefix: [UInt8] { get }
 	static var hashByteCount: Int { get }
 	static var blockSize: Int { get }
 	static var blockBufferSize: Int { get }
@@ -29,7 +29,7 @@ internal protocol SHA2: Hashing {
 }
 
 extension SHA2 {
-	public mutating func hashData(_ data: [Byte]) {
+	public mutating func hashData(_ data: [UInt8]) {
 		precondition(self.finalized == false)
 		self.data.append(data)
 		self.digestBlocks()
@@ -48,7 +48,7 @@ extension SHA2 {
 	
 	private mutating func padData() {
 		let length = Self.PaddingLength(self.data.count)
-		self.data.append([0x80] + [Byte](repeating: 0, count: length - 1),
+		self.data.append([0x80] + [UInt8](repeating: 0, count: length - 1),
 		                 shouldCount: false)
 	}
 	

@@ -3,12 +3,14 @@
 //  Hash
 //
 
+import Math
+
 // Reference: https://tools.ietf.org/html/rfc6234
 
 public struct SHA2_256: SHA2 {
-	internal typealias Data = Word
+	internal typealias Data = UInt32
 	
-	internal static let lengthBytesPrefix = [Byte]()
+	internal static let lengthBytesPrefix = [UInt8]()
 	internal static let hashByteCount = 256 / 8
 	internal static let blockSize = 64
 	internal static let blockBufferSize = 64

@@ -14,7 +14,7 @@ public struct MD5: MD {
 		[5, 8, 11, 14,  1,  4,  7, 10, 13,  0, 3,  6,  9, 12, 15,  2],
 		[0, 7, 14,  5, 12,  3, 10,  1,  8, 15, 6, 13,  4, 11,  2,  9]
 	]
-	private static let _Constant: [Word] = [
+	private static let _Constant: [UInt32] = [
 		0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee, 0xf57c0faf, 0x4787c62a,
 		0xa8304613, 0xfd469501, 0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
 		0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821, 0xf61e2562, 0xc040b340,
@@ -27,7 +27,7 @@ public struct MD5: MD {
 		0xffeff47d, 0x85845dd1, 0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1,
 		0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
 	]
-	private static let _Rotations: [[Word]] = [
+	private static let _Rotations: [[UInt32]] = [
 		[7, 12, 17, 22], [5, 9, 14, 20], [4, 11, 16, 23], [6, 10, 15, 21]
 	]
 	
@@ -35,11 +35,12 @@ public struct MD5: MD {
 		return MD5._BlockIndex[i / 16][i % 16]
 	}
 	
-	internal static func Constant(_ i: Int) -> Word {
+	internal static func Constant(_ i: Int) -> UInt32 {
 		return MD5._Constant[i]
 	}
 	
-	internal static func F(_ t: Int, _ x: Word, _ y: Word, _ z: Word) -> Word {
+	internal static func F(_ t: Int,
+						   _ x: UInt32, _ y: UInt32, _ z: UInt32) -> UInt32 {
 		switch t {
 			case  0..<16: return (x & y) | (~x & z)
 			case 16..<32: return (x & z) | (y & ~z)
@@ -49,12 +50,12 @@ public struct MD5: MD {
 		}
 	}
 	
-	internal static func Rotations(_ i: Int) -> Word {
+	internal static func Rotations(_ i: Int) -> UInt32 {
 		return MD5._Rotations[i / 16][i % 4]
 	}
 	
 	internal var data = ByteBuffer()
-	internal var digest: [Word] = [
+	internal var digest: [UInt32] = [
 		0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476
 	]
 	
@@ -62,7 +63,7 @@ public struct MD5: MD {
 	
 	public init() {}
 	
-	internal mutating func digestRoundAddToZeroth(_ value: Word) {
+	internal mutating func digestRoundAddToZeroth(_ value: UInt32) {
 		self.digest[0] = self.digest[1] &+ value
 	}
 }

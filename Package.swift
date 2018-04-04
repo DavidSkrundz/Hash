@@ -1,4 +1,4 @@
-// swift-tools-version:4.0
+// swift-tools-version:4.1
 //
 //  Package.swift
 //  Hash
@@ -11,17 +11,24 @@ let package = Package(
 	products: [
 		.library(
 			name: "Hash",
+			targets: ["Hash"]),
+		.library(
+			name: "sHash",
 			type: .static,
 			targets: ["Hash"]),
 		.library(
-			name: "Hash",
+			name: "dHash",
 			type: .dynamic,
 			targets: ["Hash"])
+	],
+	dependencies: [
+		.package(url: "https://github.com/DavidSkrundz/Math.git",
+				 .upToNextMinor(from: "1.1.0"))
 	],
 	targets: [
 		.target(
 			name: "Hash",
-			dependencies: []),
+			dependencies: ["Math"]),
 		.testTarget(
 			name: "HashTests",
 			dependencies: ["Hash"])

@@ -4,7 +4,7 @@
 //
 
 internal struct ByteBuffer {
-	private var bytes = [Byte]()
+	private var bytes = [UInt8]()
 	private var totalLength: UInt64 = 0
 	
 	/// The number of bytes currently in the buffer
@@ -20,7 +20,7 @@ internal struct ByteBuffer {
 	}
 	
 	/// Append bytes to the end of the buffer
-	internal mutating func append(_ bytes: [Byte], shouldCount: Bool = true) {
+	internal mutating func append(_ bytes: [UInt8], shouldCount: Bool = true) {
 		self.bytes += bytes
 		if shouldCount {
 			self.totalLength = self.totalLength &+ UInt64(bytes.count)
@@ -30,7 +30,7 @@ internal struct ByteBuffer {
 	/// Removes the specified number of bytes from the beginning of the buffer.
 	///
 	/// - Returns: The bytes that were removed
-	internal mutating func processBytes(_ count: Int) -> [Byte] {
+	internal mutating func processBytes(_ count: Int) -> [UInt8] {
 		defer { self.bytes.removeFirst(count) }
 		return Array(self.bytes.prefix(count))
 	}

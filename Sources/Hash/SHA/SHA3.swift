@@ -3,9 +3,11 @@
 //  Hash
 //
 
+import Math
+
 // Reference: http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
 
-private let sha3_iota_constant: [Long] = [
+private let sha3_iota_constant: [UInt64] = [
 	0x0000000000000001, 0x0000000000008082, 0x800000000000808a,
 	0x8000000080008000, 0x000000000000808b, 0x0000000080000001,
 	0x8000000080008081, 0x8000000000008009, 0x000000000000008a,
@@ -39,13 +41,13 @@ internal protocol SHA3: Hashing {
 	static var hashByteCount: Int { get }
 	
 	var data: ByteBuffer { get set }
-	var digest: [Long] { get set }
+	var digest: [UInt64] { get set }
 	
 	var finalized: Bool { get set }
 }
 
 extension SHA3 {
-	public mutating func hashData(_ data: [Byte]) {
+	public mutating func hashData(_ data: [UInt8]) {
 		assert(self.finalized == false)
 		self.data.append(data)
 		self.digestBlocks()
@@ -61,7 +63,7 @@ extension SHA3 {
 	
 	private mutating func padData() {
 		let length = Self.blockSize - (self.data.count % Self.blockSize)
-		var padding = [Byte](repeating: 0, count: length)
+		var padding = [UInt8](repeating: 0, count: length)
 		padding[0] = 0x06
 		padding[padding.count-1] |= 0x80
 		self.data.append(padding, shouldCount: false)
@@ -73,11 +75,11 @@ extension SHA3 {
 		}
 	}
 	
-	private mutating func createBlock() -> [Long] {
+	private mutating func createBlock() -> [UInt64] {
 		return self.data.processBytes(Self.blockSize).asLittleEndian()
 	}
 	
-	private mutating func digest(block: [Long]) {
+	private mutating func digest(block: [UInt64]) {
 		block.enumerated().forEach { (index, element) in
 			self.digest[index] ^= element
 		}
@@ -92,14 +94,14 @@ extension SHA3 {
 	}
 	
 	private mutating func theta() {
-		var c = [Long](repeating: 0, count: 5)
+		var c = [UInt64](repeating: 0, count: 5)
 		for i in 0..<5 {
 			for j in stride(from: 0, to: 25, by: 5) {
 				c[i] ^= self.digest[i + j]
 			}
 		}
 		
-		var d = [Long](repeating: 0, count: 5)
+		var d = [UInt64](repeating: 0, count: 5)
 		for i in 0..<5 {
 			d[i] = (c[(i + 1) % 5] <<< 1) ^ c[(i + 4) % 5]
 		}

@@ -3,11 +3,13 @@
 //  Hash
 //
 
+import Math
+
 // Reference: https://tools.ietf.org/html/rfc3174
 
 public struct SHA1: Hashing {
 	private var data = ByteBuffer()
-	private var digest: [Word] = [
+	private var digest: [UInt32] = [
 		0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0
 	]
 	
@@ -15,7 +17,7 @@ public struct SHA1: Hashing {
 	
 	public init() {}
 	
-	public mutating func hashData(_ data: [Byte]) {
+	public mutating func hashData(_ data: [UInt8]) {
 		precondition(self.finalized == false)
 		self.data.append(data)
 		self.digestBlocks()
@@ -32,7 +34,7 @@ public struct SHA1: Hashing {
 	
 	private mutating func padData() {
 		let length = 64 - ((self.data.count &- 56 &+ 64) % 64)
-		self.data.append([0x80] + [Byte](repeating: 0, count: length - 1),
+		self.data.append([0x80] + [UInt8](repeating: 0, count: length - 1),
 		                 shouldCount: false)
 	}
 	
@@ -42,12 +44,12 @@ public struct SHA1: Hashing {
 		}
 	}
 	
-	private mutating func digest(block: [Word]) {
+	private mutating func digest(block: [UInt32]) {
 		let blockBuffer = SHA1.createBlockBuffer(from: block)
 		self.computeDigest(of: blockBuffer)
 	}
 	
-	private mutating func computeDigest(of blockBuffer: [Word]) {
+	private mutating func computeDigest(of blockBuffer: [UInt32]) {
 		var abcde = self.digest
 		for t in 0..<80 {
 			let functionResult = SHA1.F(t, abcde[1], abcde[2], abcde[3])
@@ -60,8 +62,8 @@ public struct SHA1: Hashing {
 		self.digest = zip(self.digest, abcde).map(&+)
 	}
 	
-	private static func createBlockBuffer(from block: [Word]) -> [Word] {
-		var blockBuffer = block + [Word](repeating: 0, count: 80 - 16)
+	private static func createBlockBuffer(from block: [UInt32]) -> [UInt32] {
+		var blockBuffer = block + [UInt32](repeating: 0, count: 80 - 16)
 		for t in 16..<80 {
 			blockBuffer[t] = [3, 8, 14, 16]
 				.map { blockBuffer[t - $0] }
@@ -70,7 +72,8 @@ public struct SHA1: Hashing {
 		return blockBuffer
 	}
 	
-	private static func F(_ t: Int, _ b: Word, _ c: Word, _ d: Word) -> Word {
+	private static func F(_ t: Int,
+						  _ b: UInt32, _ c: UInt32, _ d: UInt32) -> UInt32 {
 		switch t {
 			case  0...19: return (b & c) | (~b & d)
 			case 20...39: return b ^ c ^ d
@@ -80,7 +83,7 @@ public struct SHA1: Hashing {
 		}
 	}
 	
-	private static func K(_ t: Int) -> Word {
+	private static func K(_ t: Int) -> UInt32 {
 		switch t {
 			case  0...19: return 0x5A827999
 			case 20...39: return 0x6ED9EBA1
