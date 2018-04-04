@@ -1,20 +1,22 @@
 //
-//  SHA2_384.swift
+//  sha384.swift
 //  Hash
 //
 
-import Math
-
 // Reference: https://tools.ietf.org/html/rfc6234
 
-public struct SHA2_384: SHA2 {
-	internal typealias Data = UInt64
+public struct sha384 {
+	private init() {}
+}
+
+extension sha384: SHA2Type, SHA512Type {
+	public typealias Data = UInt64
 	
-	internal static let lengthBytesPrefix = [UInt8](repeating: 0, count: 8)
-	internal static let hashByteCount = 384 / 8
-	internal static let blockSize = 128
-	internal static let blockBufferSize = 80
-	internal static let constant: [Data] = [
+	public static let sha2_lengthBytesPrefix = [UInt8](repeating: 0, count: 8)
+	public static let sha2_hashByteCount = 384 / 8
+	public static let sha2_blockSize = 128
+	public static let sha2_blockBufferSize = 80
+	public static let sha2_constant: [Data] = [
 		0x428a2f98d728ae22, 0x7137449123ef65cd, 0xb5c0fbcfec4d3b2f,
 		0xe9b5dba58189dbbc, 0x3956c25bf348b538, 0x59f111f1b605d019,
 		0x923f82a4af194f9b, 0xab1c5ed5da6d8118, 0xd807aa98a3030242,
@@ -44,41 +46,15 @@ public struct SHA2_384: SHA2 {
 		0x5fcb6fab3ad6faec, 0x6c44198c4a475817
 	]
 	
-	internal static func PaddingLength(_ length: Int) -> Int {
-		return 128 - ((length &- 112 &+ 128) % 128)
-	}
-	
-	internal static func SSIG0(_ x: Data) -> Data {
-		return (x >>> 1) ^ (x >>> 8) ^ (x >> 7)
-	}
-	
-	internal static func SSIG1(_ x: Data) -> Data {
-		return (x >>> 19) ^ (x >>> 61) ^ (x >> 6)
-	}
-	
-	internal static func BSIG0(_ x: Data) -> Data {
-		return (x >>> 28) ^ (x >>> 34) ^ (x >>> 39)
-	}
-	
-	internal static func BSIG1(_ x: Data) -> Data {
-		return (x >>> 14) ^ (x >>> 18) ^ (x >>> 41)
-	}
-	
-	internal static func CH(_ x: Data, _ y: Data, _ z: Data) -> Data {
-		return (x & y) ^ (~x & z)
-	}
-	internal static func MAJ(_ x: Data, _ y: Data, _ z: Data) -> Data {
-		return (x & y) ^ (x & z) ^ (y & z)
-	}
-	
-	internal var data = ByteBuffer()
-	internal var digest: [Data] = [
+	public static var sha2_initialDigest: [Data] = [
 		0xcbbb9d5dc1059ed8, 0x629a292a367cd507, 0x9159015a3070dd17,
 		0x152fecd8f70e5939, 0x67332667ffc00b31, 0x8eb44a8768581511,
 		0xdb0c2e0d64f98fa7, 0x47b5481dbefa4fa4
 	]
-	
-	internal var finalized = false
-	
-	public init() {}
+}
+
+extension sha384: SHA3Type {
+	public static let sha3_blockSize = 104
+	public static let sha3_hashByteCount = 384 / 8
+	public static var sha3_initialDigest = [UInt64](repeating: 0, count: 25)
 }

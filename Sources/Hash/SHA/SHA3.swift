@@ -7,6 +7,14 @@ import Math
 
 // Reference: http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
 
+public protocol _SHA3Type {
+	static var sha3_blockSize: Int { get }
+	static var sha3_hashByteCount: Int { get }
+	static var sha3_initialDigest: [UInt64] { get }
+}
+
+public protocol SHA3Type: _SHA3Type {}
+
 private let sha3_iota_constant: [UInt64] = [
 	0x0000000000000001, 0x0000000000008082, 0x800000000000808a,
 	0x8000000080008000, 0x000000000000808b, 0x0000000080000001,
@@ -36,17 +44,16 @@ private let sha3_pi_indices = [
 	2, 8, 14, 15, 21
 ]
 
-internal protocol SHA3: Hashing {
-	static var blockSize: Int { get }
-	static var hashByteCount: Int { get }
-	
-	var data: ByteBuffer { get set }
-	var digest: [UInt64] { get set }
-	
-	var finalized: Bool { get set }
-}
 
-extension SHA3 {
+
+public struct SHA3<T: SHA3Type>: Hashing {
+	var data = ByteBuffer()
+	var digest = T.sha3_initialDigest
+	
+	var finalized = false
+	
+	public init() {}
+	
 	public mutating func hashData(_ data: [UInt8]) {
 		assert(self.finalized == false)
 		self.data.append(data)
@@ -58,11 +65,11 @@ extension SHA3 {
 		self.padData()
 		self.digestBlocks()
 		let bytes = self.digest.flatMap { $0.littleEndianBytes }
-		return Hash(bytes: Array(bytes[0..<Self.hashByteCount]))
+		return Hash(bytes: Array(bytes[0..<T.sha3_hashByteCount]))
 	}
 	
 	private mutating func padData() {
-		let length = Self.blockSize - (self.data.count % Self.blockSize)
+		let length = T.sha3_blockSize - (self.data.count % T.sha3_blockSize)
 		var padding = [UInt8](repeating: 0, count: length)
 		padding[0] = 0x06
 		padding[padding.count-1] |= 0x80
@@ -70,13 +77,13 @@ extension SHA3 {
 	}
 	
 	private mutating func digestBlocks() {
-		while self.data.count >= Self.blockSize {
+		while self.data.count >= T.sha3_blockSize {
 			self.digest(block: self.createBlock())
 		}
 	}
 	
 	private mutating func createBlock() -> [UInt64] {
-		return self.data.processBytes(Self.blockSize).asLittleEndian()
+		return self.data.processBytes(T.sha3_blockSize).asLittleEndian()
 	}
 	
 	private mutating func digest(block: [UInt64]) {
