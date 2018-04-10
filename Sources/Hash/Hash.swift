@@ -3,7 +3,7 @@
 //  Hash
 //
 
-public struct Hash {
+public struct Hash: Equatable {
 	public let bytes: [UInt8]
 	
 	internal init(bytes: [UInt8]) {
