@@ -6,7 +6,7 @@
 import XCTest
 import Hash
 
-class SHA3_384Tests: XCTestCase {
+final class SHA3_384Tests: XCTestCase {
 	func testEmptyBytes() {
 		let bytes = [UInt8]()
 		let digest = SHA3<sha384>.hash(bytes)
@@ -68,7 +68,9 @@ class SHA3_384Tests: XCTestCase {
 		let digest = SHA3<sha384>.hash(bytes)
 		XCTAssertEqual(digest.description, "3c213a17f514638acb3bf17f109f3e24c16f9f14f085b52a2f2b81adc0db83df1a58db2ce013191b8ba72d8fae7e2a5e")
 	}
-	
+}
+
+extension SHA3_384Tests: TestCase {
 	static var allTests = [
 		("testEmptyBytes", testEmptyBytes),
 		("testLazyDog", testLazyDog),
@@ -78,6 +80,6 @@ class SHA3_384Tests: XCTestCase {
 		("testMessageDigest", testMessageDigest),
 		("testAlphabet", testAlphabet),
 		("testFullAlphabet", testFullAlphabet),
-		("testLotsOfNumbers", testLotsOfNumbers)
+		("testLotsOfNumbers", testLotsOfNumbers),
 	]
 }

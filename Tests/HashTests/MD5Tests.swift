@@ -6,7 +6,7 @@
 import XCTest
 import Hash
 
-class MD5Tests: XCTestCase {
+final class MD5Tests: XCTestCase {
 	func testEmptyBytes() {
 		let bytes = [UInt8]()
 		let digest = MD5.hash(bytes)
@@ -68,7 +68,9 @@ class MD5Tests: XCTestCase {
 		let digest = MD5.hash(bytes)
 		XCTAssertEqual(digest.description, "57edf4a22be3c955ac49da2e2107b67a")
 	}
-	
+}
+
+extension MD5Tests: TestCase {
 	static var allTests = [
 		("testEmptyBytes", testEmptyBytes),
 		("testLazyDog", testLazyDog),
@@ -78,6 +80,6 @@ class MD5Tests: XCTestCase {
 		("testMessageDigest", testMessageDigest),
 		("testAlphabet", testAlphabet),
 		("testFullAlphabet", testFullAlphabet),
-		("testLotsOfNumbers", testLotsOfNumbers)
+		("testLotsOfNumbers", testLotsOfNumbers),
 	]
 }

@@ -6,7 +6,7 @@
 import XCTest
 import Hash
 
-class SHA2_512Tests: XCTestCase {
+final class SHA2_512Tests: XCTestCase {
 	func testEmptyBytes() {
 		let bytes = [UInt8]()
 		let digest = SHA2<sha512>.hash(bytes)
@@ -68,7 +68,9 @@ class SHA2_512Tests: XCTestCase {
 		let digest = SHA2<sha512>.hash(bytes)
 		XCTAssertEqual(digest.description, "72ec1ef1124a45b047e8b7c75a932195135bb61de24ec0d1914042246e0aec3a2354e093d76f3048b456764346900cb130d2a4fd5dd16abb5e30bcb850dee843")
 	}
-	
+}
+
+extension SHA2_512Tests: TestCase {
 	static var allTests = [
 		("testEmptyBytes", testEmptyBytes),
 		("testLazyDog", testLazyDog),
@@ -78,6 +80,6 @@ class SHA2_512Tests: XCTestCase {
 		("testMessageDigest", testMessageDigest),
 		("testAlphabet", testAlphabet),
 		("testFullAlphabet", testFullAlphabet),
-		("testLotsOfNumbers", testLotsOfNumbers)
+		("testLotsOfNumbers", testLotsOfNumbers),
 	]
 }
